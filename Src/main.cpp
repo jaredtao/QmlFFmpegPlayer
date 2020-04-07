@@ -1,4 +1,4 @@
-﻿#include <QGuiApplication>
+#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QSurfaceFormat>
 #include "TaoItem.h"
@@ -10,10 +10,10 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Tao");
     app.setOrganizationDomain("Tao");
 
-    auto format = QSurfaceFormat::defaultFormat();
-    format.setProfile(QSurfaceFormat::CoreProfile);
+//    auto format = QSurfaceFormat::defaultFormat();
+//    format.setProfile(QSurfaceFormat::CoreProfile);
 //    format.setOption(QSurfaceFormat::DebugContext);
-    QSurfaceFormat::setDefaultFormat(format);
+//    QSurfaceFormat::setDefaultFormat(format);
 
     qmlRegisterType<TaoItem>("TaoItem", 1, 0, "TaoItem");
 

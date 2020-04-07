@@ -3,10 +3,10 @@
 #include <QOpenGLFramebufferObject>
 #include <QQuickWindow>
 //************TaoItemRender************//
-class TaoItemRender : public QQuickFramebufferObject::Renderer
+class TItemRender : public QQuickFramebufferObject::Renderer
 {
 public:
-    TaoItemRender();
+    TItemRender();
 
     void render() override;
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) override;
@@ -16,18 +16,18 @@ private:
     QQuickWindow *m_window = nullptr;
 };
 
-TaoItemRender::TaoItemRender()
+TItemRender::TItemRender()
 {
     m_render.init();
 }
 
-void TaoItemRender::render()
+void TItemRender::render()
 {
     m_render.paint();
     m_window->resetOpenGLState();
 }
 
-QOpenGLFramebufferObject *TaoItemRender::createFramebufferObject(const QSize &size)
+QOpenGLFramebufferObject *TItemRender::createFramebufferObject(const QSize &size)
 {
     QOpenGLFramebufferObjectFormat format;
     format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -36,7 +36,7 @@ QOpenGLFramebufferObject *TaoItemRender::createFramebufferObject(const QSize &si
     return new QOpenGLFramebufferObject(size, format);
 }
 
-void TaoItemRender::synchronize(QQuickFramebufferObject *item)
+void TItemRender::synchronize(QQuickFramebufferObject *item)
 {
     TaoItem *pItem = qobject_cast<TaoItem *>(item);
     if (pItem)
@@ -105,6 +105,6 @@ void TaoItem::onVideoInfoReady(int width, int height, int format)
 
 QQuickFramebufferObject::Renderer *TaoItem::createRenderer() const
 {
-    return new TaoItemRender;
+    return new TItemRender;
 }
 
