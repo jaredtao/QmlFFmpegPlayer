@@ -31,13 +31,42 @@ QML_IMPORT_PATH =
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
+FFmpegPath = $$_PRO_FILE_PWD_/FFmpeg
 
 
-FFMPEGPath=$$_PRO_FILE_PWD_/FFmpeg/win64
+greaterThan(QT_MAJOR_VERSION, 4) {
+    TARGET_ARCH=$${QT_ARCH}
+} else {
+    TARGET_ARCH=$${QMAKE_HOST.arch}
+}
 
-INCLUDEPATH +=$$FFMPEGPath/include
-LIBS += -L$$FFMPEGPath/lib -lavutil -lavcodec -lavformat
+win32 {
+    contains(TARGET_ARCH, x86_64) {
+        #x64
+        LIBS += -L$$FFmpegPath/lib/win64
+        BinPath = $$_PRO_FILE_PWD_/bin/win64
+        message("win64")
+    } else {
+        # 32
+        LIBS += -L$$FFmpegPath/lib/win32
+        BinPath = $$_PRO_FILE_PWD_/bin/win32
+        message("win32")
+    }
+}
+macos {
+    LIBS += -L$$FFmpegPath/lib/macos
+    BinPath = $$_PRO_FILE_PWD_/bin/macos
+    message("macos")
+}
 
-DESTDIR = $$_PRO_FILE_PWD_/bin
+INCLUDEPATH += $$FFmpegPath/include
+LIBS += -lavutil -lavcodec -lavformat
 
-OTHER_FILES += README.md
+DESTDIR = $$BinPath
+
+OTHER_FILES += \
+    README.md \
+    LICENSE \
+    .github/workflows/*
+
+
