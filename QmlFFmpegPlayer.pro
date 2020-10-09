@@ -34,14 +34,9 @@ QML_DESIGNER_IMPORT_PATH =
 FFmpegPath = $$_PRO_FILE_PWD_/FFmpeg
 
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-    TARGET_ARCH=$${QT_ARCH}
-} else {
-    TARGET_ARCH=$${QMAKE_HOST.arch}
-}
 
 win32 {
-    contains(TARGET_ARCH, x86_64) {
+    contains(QT_ARCH, x86_64) {
         #x64
         LIBS += -L$$FFmpegPath/lib/win64
         BinPath = $$_PRO_FILE_PWD_/bin/win64
