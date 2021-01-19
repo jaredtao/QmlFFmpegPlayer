@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include <memory>
 #include <QQuickItem>
 #include <QQuickFramebufferObject>
 #include "TaoDecoder.h"
