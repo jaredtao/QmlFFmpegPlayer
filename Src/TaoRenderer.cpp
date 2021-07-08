@@ -1,7 +1,7 @@
 ﻿#include "TaoRenderer.h"
 
 #include <QOpenGLPixelTransferOptions>
-static void safeDeleteTexture(QOpenGLTexture *texture)
+static void safeDeleteTexture(QOpenGLTexture* texture)
 {
     if (texture)
     {
@@ -96,14 +96,8 @@ void TaoRenderer::initTexture()
 
 void TaoRenderer::initGeometry()
 {
-    mVertices << QVector3D(-1, 1, 0.0f)
-              << QVector3D(1, 1, 0.0f)
-              << QVector3D(1, -1, 0.0f)
-              << QVector3D(-1, -1, 0.0f);
-    mTexcoords<< QVector2D(0, 1)
-               << QVector2D(1, 1)
-               << QVector2D(1, 0)
-               << QVector2D(0, 0);
+    mVertices << QVector3D(-1, 1, 0.0f) << QVector3D(1, 1, 0.0f) << QVector3D(1, -1, 0.0f) << QVector3D(-1, -1, 0.0f);
+    mTexcoords << QVector2D(0, 1) << QVector2D(1, 1) << QVector2D(1, 0) << QVector2D(0, 0);
 
     mViewMatrix.setToIdentity();
     mViewMatrix.lookAt(QVector3D(0.0f, 0.0f, 1.001f), QVector3D(0.0f, 0.0f, -5.0f), QVector3D(0.0f, 1.0f, 0.0f));
@@ -138,7 +132,7 @@ void TaoRenderer::updateTextureInfo(int width, int height, int format)
     mTextureAlloced = true;
 }
 
-void TaoRenderer::updateTextureData(const YUVData &data)
+void TaoRenderer::updateTextureData(const YUVData& data)
 {
     if (data.Y.size() <= 0)
     {
@@ -163,7 +157,6 @@ void TaoRenderer::updateTextureData(const YUVData &data)
     mTexU->setData(QOpenGLTexture::Luminance, QOpenGLTexture::UInt8, data.U.data(), &options);
     options.setRowLength(data.vLineSize);
     mTexV->setData(QOpenGLTexture::Luminance, QOpenGLTexture::UInt8, data.V.data(), &options);
-
 }
 void TaoRenderer::paint()
 {
@@ -220,6 +213,3 @@ void TaoRenderer::paint()
     mProgram.disableAttributeArray(mTexCoordHandle);
     mProgram.release();
 }
-
-
-

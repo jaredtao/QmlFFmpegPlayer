@@ -5,13 +5,12 @@
  * needs. Look for the use of refcount in this example to see what are the
  * differences of API usage between them. */
 static int gRefCount = 0;
-static void pgm_save(unsigned char *buf, int wrap, int xsize, int ysize,
-                     char *filename)
+static void pgm_save(unsigned char* buf, int wrap, int xsize, int ysize, char* filename)
 {
-    FILE *f;
+    FILE* f;
     int i;
 
-    f = fopen(filename,"w");
+    f = fopen(filename, "w");
     fprintf(f, "P5\n%d %d\n%d\n", xsize, ysize, 255);
     for (i = 0; i < ysize; i++)
         fwrite(buf + i * wrap, 1, xsize, f);
@@ -23,16 +22,13 @@ static void outError(int num)
     av_strerror(num, errorStr, sizeof errorStr);
     qDebug() << "FFMPEG ERROR:" << QString(errorStr);
 }
-static int open_codec_context(int &streamIndex
-                              , AVCodecContext **decCtx
-                              , AVFormatContext *fmtCtx
-                              , enum AVMediaType type)
+static int open_codec_context(int& streamIndex, AVCodecContext** decCtx, AVFormatContext* fmtCtx, enum AVMediaType type)
 {
     int ret;
     int index;
-    AVStream *st;
-    AVCodec *codec = nullptr;
-    AVDictionary *opts = nullptr;
+    AVStream* st;
+    AVCodec* codec = nullptr;
+    AVDictionary* opts = nullptr;
     ret = av_find_best_stream(fmtCtx, type, -1, -1, nullptr, 0);
     if (ret < 0)
     {
@@ -80,11 +76,11 @@ void TaoDecoder::uninit()
     avformat_network_deinit();
 }
 
-void TaoDecoder::load(const QString &file)
+void TaoDecoder::load(const QString& file)
 {
     int ret = 0;
     ret = avformat_open_input(&m_fmtCtx, file.toStdString().data(), nullptr, nullptr);
-    if ( 0 > ret)
+    if (0 > ret)
     {
         qWarning() << "open url error";
         outError(ret);
@@ -111,7 +107,8 @@ void TaoDecoder::load(const QString &file)
     emit videoInfoReady(m_width, m_height, m_pixFmt);
 
     av_dump_format(m_fmtCtx, 0, file.toStdString().data(), 0);
-    do {
+    do
+    {
         if (!m_videoStream)
         {
             qWarning() << "Could not find audio or video stream in the input, aborting";
@@ -124,11 +121,10 @@ void TaoDecoder::load(const QString &file)
             break;
         }
         demuxing();
-    }while(0);
+    } while (0);
     avcodec_free_context(&m_videoCodecCtx);
     avformat_close_input(&m_fmtCtx);
     av_frame_free(&m_frame);
-
 }
 
 void TaoDecoder::demuxing()
@@ -136,7 +132,7 @@ void TaoDecoder::demuxing()
     av_init_packet(&m_packet);
     m_packet.data = nullptr;
     m_packet.size = 0;
-    while(av_read_frame(m_fmtCtx, &m_packet) >= 0)
+    while (av_read_frame(m_fmtCtx, &m_packet) >= 0)
     {
         if (m_packet.stream_index == m_videoStreamIndex)
         {
@@ -161,41 +157,41 @@ void TaoDecoder::demuxing()
 void TaoDecoder::decodeFrame()
 {
 
-    switch (m_frame->format) {
-        case AV_PIX_FMT_YUV420P:
-        {
-            m_yuvData.Y.resize(m_frame->linesize[0] * m_frame->height);
-            memcpy_s(m_yuvData.Y.data(), static_cast<size_t>(m_yuvData.Y.size()), m_frame->data[0], static_cast<size_t>(m_yuvData.Y.size()));
-            m_yuvData.U.resize(m_frame->linesize[1] * m_frame->height / 2);
-            memcpy_s(m_yuvData.U.data(), static_cast<size_t>(m_yuvData.U.size()), m_frame->data[1], static_cast<size_t>(m_yuvData.U.size()));
-            m_yuvData.V.resize(m_frame->linesize[2] * m_frame->height / 2);
-            memcpy_s(m_yuvData.V.data(), static_cast<size_t>(m_yuvData.V.size()), m_frame->data[2], static_cast<size_t>(m_yuvData.V.size()));
-            m_yuvData.yLineSize = m_frame->linesize[0];
-            m_yuvData.uLineSize = m_frame->linesize[1];
-            m_yuvData.vLineSize = m_frame->linesize[2];
-            m_yuvData.height = m_frame->height;
-            emit videoFrameDataReady(m_yuvData);
+    switch (m_frame->format)
+    {
+    case AV_PIX_FMT_YUV420P: {
+        m_yuvData.Y.resize(m_frame->linesize[0] * m_frame->height);
+        memcpy_s(m_yuvData.Y.data(), static_cast<size_t>(m_yuvData.Y.size()), m_frame->data[0], static_cast<size_t>(m_yuvData.Y.size()));
+        m_yuvData.U.resize(m_frame->linesize[1] * m_frame->height / 2);
+        memcpy_s(m_yuvData.U.data(), static_cast<size_t>(m_yuvData.U.size()), m_frame->data[1], static_cast<size_t>(m_yuvData.U.size()));
+        m_yuvData.V.resize(m_frame->linesize[2] * m_frame->height / 2);
+        memcpy_s(m_yuvData.V.data(), static_cast<size_t>(m_yuvData.V.size()), m_frame->data[2], static_cast<size_t>(m_yuvData.V.size()));
+        m_yuvData.yLineSize = m_frame->linesize[0];
+        m_yuvData.uLineSize = m_frame->linesize[1];
+        m_yuvData.vLineSize = m_frame->linesize[2];
+        m_yuvData.height = m_frame->height;
+        emit videoFrameDataReady(m_yuvData);
 
-//            char buf[1024];
-//            snprintf(buf, sizeof(buf), "%d%s", m_videoCodecCtx->frame_number, ".pgm");
-//            pgm_save(m_frame->data[0], m_frame->linesize[0],
-//                     m_frame->width, m_frame->height, buf);
+        //            char buf[1024];
+        //            snprintf(buf, sizeof(buf), "%d%s", m_videoCodecCtx->frame_number, ".pgm");
+        //            pgm_save(m_frame->data[0], m_frame->linesize[0],
+        //                     m_frame->width, m_frame->height, buf);
 
-            break;
-        }
-            //                        case AV_PIX_FMT_NV12:
-            //                        {
-            //                            break;
-            //                        }
-        default:
-            //TODO support other format
-            break;
-
+        break;
+    }
+        //                        case AV_PIX_FMT_NV12:
+        //                        {
+        //                            break;
+        //                        }
+    default:
+        // TODO support other format
+        break;
     }
 }
 
 //--------------------------------------------------------------------------------//
-TaoDecoderController::TaoDecoderController(QObject *parent) : QObject(parent)
+TaoDecoderController::TaoDecoderController(QObject* parent)
+    : QObject(parent)
 {
     m_videoDataCache.setCapacity(1024);
 
@@ -224,7 +220,7 @@ TaoDecoderController::~TaoDecoderController()
     }
 }
 
-YUVData TaoDecoderController::getFrame(bool &got)
+YUVData TaoDecoderController::getFrame(bool& got)
 {
     if (m_videoDataCache.isEmpty())
     {

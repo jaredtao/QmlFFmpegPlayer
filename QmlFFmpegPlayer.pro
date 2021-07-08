@@ -62,6 +62,7 @@ DESTDIR = $$BinPath
 OTHER_FILES += \
     README.md \
     LICENSE \
+    .clang-format \
     .github/workflows/*
 
 

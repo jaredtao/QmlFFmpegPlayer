@@ -1,11 +1,11 @@
 ﻿#pragma once
 
+#include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
-#include <QQuickFramebufferObject>
-#include <QOpenGLTexture>
 #include <QOpenGLShader>
 #include <QOpenGLShaderProgram>
-#include <QOpenGLBuffer>
+#include <QOpenGLTexture>
+#include <QQuickFramebufferObject>
 #include <memory>
 
 #include "TaoDecoder.h"
@@ -19,17 +19,18 @@ public:
     void paint();
     void resize(int width, int height);
     void updateTextureInfo(int width, int height, int format);
-    void updateTextureData(const YUVData &data);
+    void updateTextureData(const YUVData& data);
+
 protected:
     void initTexture();
     void initShader();
     void initGeometry();
-private:
 
+private:
     QOpenGLShaderProgram mProgram;
-    QOpenGLTexture *mTexY = nullptr;
-    QOpenGLTexture *mTexU = nullptr;
-    QOpenGLTexture *mTexV = nullptr;
+    QOpenGLTexture* mTexY = nullptr;
+    QOpenGLTexture* mTexU = nullptr;
+    QOpenGLTexture* mTexV = nullptr;
     QVector<QVector3D> mVertices;
     QVector<QVector2D> mTexcoords;
     int mModelMatHandle, mViewMatHandle, mProjectMatHandle;
@@ -42,4 +43,3 @@ private:
     GLint mPixFmt = 0;
     bool mTextureAlloced = false;
 };
-

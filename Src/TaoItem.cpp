@@ -9,11 +9,12 @@ public:
     TItemRender();
 
     void render() override;
-    QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) override;
-    void synchronize(QQuickFramebufferObject *) override;
+    QOpenGLFramebufferObject* createFramebufferObject(const QSize& size) override;
+    void synchronize(QQuickFramebufferObject*) override;
+
 private:
     TaoRenderer m_render;
-    QQuickWindow *m_window = nullptr;
+    QQuickWindow* m_window = nullptr;
 };
 
 TItemRender::TItemRender()
@@ -27,7 +28,7 @@ void TItemRender::render()
     m_window->resetOpenGLState();
 }
 
-QOpenGLFramebufferObject *TItemRender::createFramebufferObject(const QSize &size)
+QOpenGLFramebufferObject* TItemRender::createFramebufferObject(const QSize& size)
 {
     QOpenGLFramebufferObjectFormat format;
     format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -36,9 +37,9 @@ QOpenGLFramebufferObject *TItemRender::createFramebufferObject(const QSize &size
     return new QOpenGLFramebufferObject(size, format);
 }
 
-void TItemRender::synchronize(QQuickFramebufferObject *item)
+void TItemRender::synchronize(QQuickFramebufferObject* item)
 {
-    TaoItem *pItem = qobject_cast<TaoItem *>(item);
+    TaoItem* pItem = qobject_cast<TaoItem*>(item);
     if (pItem)
     {
         if (!m_window)
@@ -60,7 +61,8 @@ void TItemRender::synchronize(QQuickFramebufferObject *item)
 }
 
 //************TaoItem************//
-TaoItem::TaoItem(QQuickItem *parent) : QQuickFramebufferObject (parent)
+TaoItem::TaoItem(QQuickItem* parent)
+    : QQuickFramebufferObject(parent)
 {
     m_decoderController = std::make_unique<TaoDecoderController>();
     connect(m_decoderController.get(), &TaoDecoderController::videoInfoReady, this, &TaoItem::onVideoInfoReady);
@@ -68,18 +70,18 @@ TaoItem::TaoItem(QQuickItem *parent) : QQuickFramebufferObject (parent)
     startTimer(1000 / 60);
 }
 
-void TaoItem::timerEvent(QTimerEvent *event)
+void TaoItem::timerEvent(QTimerEvent* event)
 {
     Q_UNUSED(event);
     update();
 }
 
-YUVData TaoItem::getFrame(bool &got)
+YUVData TaoItem::getFrame(bool& got)
 {
     return m_decoderController->getFrame(got);
 }
 
-void TaoItem::loadFile(const QUrl &url)
+void TaoItem::loadFile(const QUrl& url)
 {
     m_decoderController->load(url.toLocalFile());
 }
@@ -103,8 +105,7 @@ void TaoItem::onVideoInfoReady(int width, int height, int format)
     }
 }
 
-QQuickFramebufferObject::Renderer *TaoItem::createRenderer() const
+QQuickFramebufferObject::Renderer* TaoItem::createRenderer() const
 {
     return new TItemRender;
 }
-
