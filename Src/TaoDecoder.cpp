@@ -161,11 +161,11 @@ void TaoDecoder::decodeFrame()
     {
     case AV_PIX_FMT_YUV420P: {
         m_yuvData.Y.resize(m_frame->linesize[0] * m_frame->height);
-        memcpy_s(m_yuvData.Y.data(), static_cast<size_t>(m_yuvData.Y.size()), m_frame->data[0], static_cast<size_t>(m_yuvData.Y.size()));
+        memcpy(m_yuvData.Y.data(), m_frame->data[0], static_cast<size_t>(m_yuvData.Y.size()));
         m_yuvData.U.resize(m_frame->linesize[1] * m_frame->height / 2);
-        memcpy_s(m_yuvData.U.data(), static_cast<size_t>(m_yuvData.U.size()), m_frame->data[1], static_cast<size_t>(m_yuvData.U.size()));
+        memcpy(m_yuvData.U.data(), m_frame->data[1], static_cast<size_t>(m_yuvData.U.size()));
         m_yuvData.V.resize(m_frame->linesize[2] * m_frame->height / 2);
-        memcpy_s(m_yuvData.V.data(), static_cast<size_t>(m_yuvData.V.size()), m_frame->data[2], static_cast<size_t>(m_yuvData.V.size()));
+        memcpy(m_yuvData.V.data(), m_frame->data[2], static_cast<size_t>(m_yuvData.V.size()));
         m_yuvData.yLineSize = m_frame->linesize[0];
         m_yuvData.uLineSize = m_frame->linesize[1];
         m_yuvData.vLineSize = m_frame->linesize[2];
