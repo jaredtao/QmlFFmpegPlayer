@@ -10,10 +10,12 @@ int main(int argc, char* argv[])
 	app.setOrganizationName("Tao");
 	app.setOrganizationDomain("Tao");
 
-	//    auto format = QSurfaceFormat::defaultFormat();
-	//    format.setProfile(QSurfaceFormat::CoreProfile);
-	//    format.setOption(QSurfaceFormat::DebugContext);
-	//    QSurfaceFormat::setDefaultFormat(format);
+    auto format = QSurfaceFormat::defaultFormat();
+    format.setProfile(QSurfaceFormat::CoreProfile);
+#ifdef DEBUG_GL    
+    format.setOption(QSurfaceFormat::DebugContext);
+#endif    
+    QSurfaceFormat::setDefaultFormat(format);
 
 	qmlRegisterType<TaoItem>("TaoItem", 1, 0, "TaoItem");
 

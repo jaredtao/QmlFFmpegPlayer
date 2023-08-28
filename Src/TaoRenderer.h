@@ -6,6 +6,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QQuickFramebufferObject>
+#include <QOpenGLDebugLogger>
 #include <memory>
 
 #include "TaoDecoder.h"
@@ -42,4 +43,6 @@ private:
 	QMatrix4x4 mProjectionMatrix;
 	GLint	   mPixFmt		   = 0;
 	bool	   mTextureAlloced = false;
+
+	QOpenGLDebugLogger* mLogger = nullptr;	
 };

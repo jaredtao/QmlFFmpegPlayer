@@ -21,11 +21,20 @@ static void safeDeleteTexture(QOpenGLTexture* texture)
 TaoRenderer::TaoRenderer()
 {
 	qWarning() << __FUNCTION__;
+
 }
 
 TaoRenderer::~TaoRenderer()
 {
 	qWarning() << __FUNCTION__;
+#ifdef DEBUG_GL
+    if(mLogger) 
+    {
+        mLogger->stopLogging();
+        delete mLogger;
+        mLogger = nullptr;
+    }
+#endif 		
 	safeDeleteTexture(mTexY);
 	safeDeleteTexture(mTexU);
 	safeDeleteTexture(mTexV);
@@ -35,6 +44,14 @@ void TaoRenderer::init()
 {
 	qWarning() << __FUNCTION__;
 	initializeOpenGLFunctions();
+#ifdef DEBUG_GL
+    mLogger = new QOpenGLDebugLogger();
+    QObject::connect(mLogger, &QOpenGLDebugLogger::messageLogged, mLogger, [](const QOpenGLDebugMessage &debugMessage){
+        qWarning() << "GL:" << debugMessage.type() << debugMessage.message();
+    });
+    mLogger->initialize();
+    mLogger->startLogging();
+#endif	
 	glDepthMask(GL_TRUE);
 	glEnable(GL_TEXTURE_2D);
 	initShader();
